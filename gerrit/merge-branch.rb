@@ -136,6 +136,11 @@ if merge_conflict.size != 0
     logger.warn("\t#{my_mergeable_info.source_revision_sha1} -> #{my_mergeable_info.target_revision_sha1}")
   }
   exit(1)
+elsif merge_auto.size == 0
+  logger.warn("====================================================")
+  logger.warn("no project need to be merged")
+  logger.warn("====================================================")
+  exit(0)
 else
   logger.info("merge #{source_branch} into #{target_branch}")
   `repo init -q -u git://#{host}/#{manifest_project} -b #{target_branch} --reference=/media/d/mirror`
