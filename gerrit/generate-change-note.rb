@@ -67,12 +67,12 @@ def create_worksheet(book, host, sheet_name, since_time, until_time, repo_manife
         message = commit["message"]
         project = commit["project"]
 
-        risk_area = extract(message, "riskarea:\n*(.*)")
-        impacted_group = extract(message, "impacted group:\n*(.*)")
+        risk_area = extract(message, "riskarea:\n?(.*)")
+        impacted_group = extract(message, "impacted group:\n?(.*)")
         fix_issue = extract(message, "arima(.*)")
-        feature = extract(message, "feature:\n*(.*)")
-        root_cause = extract(message, "root cause:\n*(.*)")
-        how_to_fix = extract(message, "how to fix:\n*(.*)")
+        feature = extract(message, "feature:\n?(.*)")
+        root_cause = extract(message, "root cause:\n?(.*)")
+        how_to_fix = extract(message, "how to fix:\n?(.*)")
 
         sheet[row, 0] = commit_id
         sheet[row, 1] = commit["committer_time"]
