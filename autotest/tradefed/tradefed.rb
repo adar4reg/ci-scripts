@@ -27,7 +27,7 @@ testcase = ARGV[2]
 flasher = ARGV[3]
 
 base_url = "http://artifactory.arimacomm.com.tw:8081/artifactory"
-aql = 'items.find({"$and":[{"created":{"$last":"2days"}},{"name":{"$match":"' + project + '*userdebug*fastbootimage.7z"}}]})'
+aql = 'items.find({"$and":[{"created":{"$last":"2days"}},{"name":{"$match":"' + project + '*REL*userdebug*fastbootimage.7z"}}]})'
 result = RestClient.post "#{base_url}/api/search/aql", aql, :content_type => "text/plain"
 files = JSON.parse(result.to_s)["results"]
 
