@@ -9,8 +9,8 @@ def create_xml(testcase)
     testcase.each do |tc|
       t.test(class: "com.arima.autotest.tradefed.#{tc}")
     end
+    t.result_reporter(class: "com.android.tradefed.result.TextResultReporter")
     t.result_reporter(class: "com.arima.autotest.tradefed.result.XmlResultReporter")
-    t.logger(class: "com.android.tradefed.log.FileLogger")
   end
 end
 
