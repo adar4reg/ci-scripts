@@ -20,7 +20,7 @@ mv ../$fastboot_artifact .
 7z x $fastboot_artifact
 zip -j fastboot.zip fastboot_bin/*
 
-java -cp "/opt/tradefed/*" com.android.tradefed.command.CommandRunner ${testcase} --log-level=debug --serial=${project}AAAAAAAAAAA ${flasher}
+java -cp "/opt/tradefed/*" com.android.tradefed.command.CommandRunner ${testcase} --log-level=debug --log-file-path=. --serial=${project}AAAAAAAAAAA ${flasher}
 
 for z in 0/stub/**/*.zip; do unzip ${z}; done
 mv 0/stub/**/test*.html test_result.html
