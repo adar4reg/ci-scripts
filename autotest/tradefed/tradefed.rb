@@ -14,17 +14,18 @@ def upload(url, file)
   RestClient.put url, File.open(file, 'rb'), {"X-Checksum": md5}
 end
 
-def run_tradefed(project, fastboot_artifact, autotest_artifact, testcase, flasher)
-  system("./tradefed.sh", "#{project}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{testcase}", "#{flasher}")
+def run_tradefed(project, serial, fastboot_artifact, autotest_artifact, testcase, flasher)
+  system("./tradefed.sh", "#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{testcase}", "#{flasher}")
   if $?.exitstatus > 0
     exit($?.exitstatus)
   end
 end
 
 project = ARGV[0]
-pattern = ARGV[1]
-testcase = ARGV[2]
-flasher = ARGV[3]
+serial = ARGV[1]
+pattern = ARGV[2]
+testcase = ARGV[3]
+flasher = ARGV[4]
 
 base_url = "http://artifactory.arimacomm.com.tw:8081/artifactory"
 aql = 'items.find({"$and":[{"created":{"$last":"2days"}},{"name":{"$match":"' + project + '*REL*userdebug*fastbootimage.7z"}}]})'
@@ -39,7 +40,7 @@ if pattern.nil? || pattern.empty?
       RestClient.get "#{base_url}/api/storage/libs-test-local/#{file['path']}/#{autotest_artifact}"
     rescue
       download("#{base_url}/#{file['repo']}/#{file['path']}/#{fastboot_artifact}", fastboot_artifact)
-      run_tradefed("#{project}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{testcase}", "#{flasher}")
+      run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{testcase}", "#{flasher}")
       upload("#{base_url}/libs-test-local/#{file['path']}/#{autotest_artifact}", autotest_artifact)
     end
   end
@@ -52,7 +53,7 @@ else
   rescue
     system("ruby", "configuration.rb", "#{testcase}")
     download("#{base_url}/#{pattern}", fastboot_artifact)
-    run_tradefed("#{project}", "#{fastboot_artifact}", "#{autotest_artifact}", "../test.xml", "#{flasher}")
+    run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "../test.xml", "#{flasher}")
     upload("#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", autotest_artifact)
   end
 end

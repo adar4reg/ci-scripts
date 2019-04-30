@@ -1,10 +1,11 @@
 #!/bin/bash -el
 
 project=$1
-fastboot_artifact=$2
-autotest_artifact=$3
-testcase=$4
-flasher=$5
+serial=$2
+fastboot_artifact=$3
+autotest_artifact=$4
+testcase=$5
+flasher=$6
 
 if [ -z "$testcase" ]; then
   testcase="arima/$project"
@@ -20,7 +21,7 @@ mv ../$fastboot_artifact .
 7z x $fastboot_artifact
 zip -j fastboot.zip fastboot_bin/*
 
-java -cp "/opt/tradefed/*" com.android.tradefed.command.CommandRunner ${testcase} --log-level=debug --log-file-path=. --serial=${project}AAAAAAAAAAA ${flasher}
+java -cp "/opt/tradefed/*" com.android.tradefed.command.CommandRunner ${testcase} --log-level=debug --log-file-path=. --serial=${serial} ${flasher}
 
 for z in 0/stub/**/*.zip; do unzip ${z}; done
 mv 0/stub/**/test*.html test_result.html
