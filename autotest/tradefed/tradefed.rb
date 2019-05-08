@@ -9,7 +9,7 @@ def download(url, file)
 end
 
 def upload(url, file)
-  puts "upload #{file} ..."
+  puts "upload #{url} ..."
   md5 = Digest::MD5.hexdigest File.read(file)
   RestClient.put url, File.open(file, 'rb'), {"X-Checksum": md5}
 end
