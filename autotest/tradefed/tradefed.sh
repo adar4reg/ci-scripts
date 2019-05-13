@@ -19,7 +19,9 @@ mkdir tmp
 cd tmp
 mv ../$fastboot_artifact .
 7z x $fastboot_artifact
-zip -j fastboot.zip fastboot_bin/*
+cd fastboot_bin
+zip -r ../fastboot.zip *
+cd ..
 
 java -cp "/opt/tradefed/*" com.android.tradefed.command.CommandRunner ${testcase} --log-level=debug --log-file-path=. --serial=${serial} ${flasher}
 
