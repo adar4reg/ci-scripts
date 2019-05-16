@@ -4,14 +4,11 @@ project=$1
 serial=$2
 fastboot_artifact=$3
 autotest_artifact=$4
-testcase=$5
-flasher=$6
+flasher=$5
+testcase=$6
 
 if [ -z "$testcase" ]; then
   testcase="arima/$project"
-fi
-if ! [ -z "$flasher" ]; then
-  flasher="--flasher-class $flasher"
 fi
 
 rm -rf tmp
@@ -23,7 +20,7 @@ cd fastboot_bin
 zip -r ../fastboot.zip *
 cd ..
 
-java -cp "/opt/tradefed/*" com.android.tradefed.command.CommandRunner ${testcase} --log-level=debug --log-file-path=. --serial=${serial} ${flasher}
+java -cp "/opt/tradefed/*" com.android.tradefed.command.CommandRunner ${testcase} --log-level=debug --log-file-path=. --serial=${serial} --flasher-class=${flasher}
 
 for z in 0/stub/**/*.zip; do unzip ${z}; done
 mv 0/stub/**/test*.html test_result.html

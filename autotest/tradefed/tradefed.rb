@@ -14,8 +14,8 @@ def upload(url, file)
   RestClient.put url, File.open(file, 'rb'), {"X-Checksum": md5}
 end
 
-def run_tradefed(project, serial, fastboot_artifact, autotest_artifact, testcase, flasher)
-  system("./tradefed.sh", "#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{testcase}", "#{flasher}")
+def run_tradefed(project, serial, fastboot_artifact, autotest_artifact, flasher, testcase)
+  system("./tradefed.sh", "#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{flasher}", "#{testcase}")
   if $?.exitstatus > 0
     exit($?.exitstatus)
   end
@@ -41,16 +41,16 @@ end
 
 project = ARGV[0]
 serial = ARGV[1]
-pattern = ARGV[2]
-testcase = ARGV[3]
-flasher = ARGV[4]
+flasher = ARGV[2]
+pattern = ARGV[3]
+testcase = ARGV[4]
 
 base_url = "http://artifactory.arimacomm.com.tw:8081/artifactory"
-aql = 'items.find({"$and":[{"created":{"$last":"2days"}},{"name":{"$match":"' + project + '*REL*userdebug*fastbootimage.7z"}}]})'
-result = RestClient.post "#{base_url}/api/search/aql", aql, :content_type => "text/plain"
-files = JSON.parse(result.to_s)["results"]
 
 if pattern.nil? || pattern.empty?
+  aql = 'items.find({"$and":[{"created":{"$last":"2days"}},{"name":{"$match":"' + project + '*REL*userdebug*fastbootimage.7z"}}]})'
+  result = RestClient.post "#{base_url}/api/search/aql", aql, :content_type => "text/plain"
+  files = JSON.parse(result.to_s)["results"]
   files.each do |file|
     begin
       fastboot_artifact = file['name']
@@ -58,7 +58,7 @@ if pattern.nil? || pattern.empty?
       RestClient.get "#{base_url}/api/storage/#{file['repo']}/#{file['path']}/#{autotest_artifact}"
     rescue
       download("#{base_url}/#{file['repo']}/#{file['path']}/#{fastboot_artifact}", fastboot_artifact)
-      run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{testcase}", "#{flasher}")
+      run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{flasher}", "#{testcase}")
       upload("#{base_url}/#{file['repo']}/#{file['path']}/#{autotest_artifact}", autotest_artifact)
       update_prop(base_url, "#{file['repo']}/#{file['path']}/#{fastboot_artifact}", "completed", (get_times(base_url, fastboot_artifact)+1).to_s)
     end
@@ -72,7 +72,7 @@ else
   # start testing
   system("ruby", "configuration.rb", "#{testcase}")
   download("#{base_url}/#{pattern}", fastboot_artifact)
-  run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "../test.xml", "#{flasher}")
+  run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{flasher}", "../test.xml")
   upload("#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", autotest_artifact)
   update_prop(base_url, pattern, "completed", times)
 end
