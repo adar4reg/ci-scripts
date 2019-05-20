@@ -34,8 +34,8 @@ def get_times(base_url, file)
   return times
 end
 
-def update_prop(base_url, pattern, status, times)
-  payload = '{"props":{"test.status":"'+status+'","test.times":"'+times+'"}}'
+def update_prop(base_url, pattern, link, times)
+  payload = '{"props":{"test.link' + times + '":"' + link + '","test.times":"' + times+'"}}'
   RestClient.patch "#{base_url}/api/metadata/#{pattern}", payload, :content_type => "application/json"
 end
 
@@ -52,16 +52,15 @@ if pattern.nil? || pattern.empty?
   result = RestClient.post "#{base_url}/api/search/aql", aql, :content_type => "text/plain"
   files = JSON.parse(result.to_s)["results"]
   files.each do |file|
-    begin
-      fastboot_artifact = file['name']
-      autotest_artifact = fastboot_artifact.sub('fastbootimage.7z', 'autotest.zip')
-      RestClient.get "#{base_url}/api/storage/#{file['repo']}/#{file['path']}/#{autotest_artifact}"
-    rescue
-      download("#{base_url}/#{file['repo']}/#{file['path']}/#{fastboot_artifact}", fastboot_artifact)
-      run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{flasher}", "#{testcase}")
-      upload("#{base_url}/#{file['repo']}/#{file['path']}/#{autotest_artifact}", autotest_artifact)
-      update_prop(base_url, "#{file['repo']}/#{file['path']}/#{fastboot_artifact}", "completed", (get_times(base_url, fastboot_artifact)+1).to_s)
-    end
+    # set up variables
+    fastboot_artifact = file['name']
+    times = (get_times(base_url, fastboot_artifact)+1).to_s
+    autotest_artifact = fastboot_artifact.sub('fastbootimage.7z', 'test' + times + '.zip')
+    # start testing
+    download("#{base_url}/#{file['repo']}/#{file['path']}/#{fastboot_artifact}", fastboot_artifact)
+    run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{flasher}", "#{testcase}")
+    upload("#{base_url}/libs-test-local/#{file['path']}/#{autotest_artifact}", autotest_artifact)
+    update_prop(base_url, "#{file['repo']}/#{file['path']}/#{fastboot_artifact}", "#{base_url}/libs-test-local/#{file['path']}/#{autotest_artifact}", times)
   end
 else
   # set up variables
@@ -74,5 +73,5 @@ else
   download("#{base_url}/#{pattern}", fastboot_artifact)
   run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{flasher}", "../test.xml")
   upload("#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", autotest_artifact)
-  update_prop(base_url, pattern, "completed", times)
+  update_prop(base_url, pattern, "#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", times)
 end
