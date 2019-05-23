@@ -1,6 +1,7 @@
-require 'rest-client'
-require 'json'
 require 'digest'
+require 'json'
+require 'optparse'
+require 'rest-client'
 
 def download(url, file)
   puts "download #{file} ..."
@@ -34,21 +35,33 @@ def get_times(base_url, file)
   return times
 end
 
-def update_prop(base_url, pattern, link, times)
+def update_prop(base_url, resource, link, times)
   payload = '{"props":{"test.link' + times + '":"' + link + '","test.times":"' + times+'"}}'
-  RestClient.patch "#{base_url}/api/metadata/#{pattern}", payload, :content_type => "application/json"
+  RestClient.patch "#{base_url}/api/metadata/#{resource}", payload, :content_type => "application/json"
 end
 
-project = ARGV[0]
-serial = ARGV[1]
-flasher = ARGV[2]
-pattern = ARGV[3]
-testcase = ARGV[4]
+OptionParser.new do |parser|
+  parser.on("-p p", "--project=p", "project name") do |project|
+    @project = project
+  end
+  parser.on("-s s", "--serial=s", "serial number") do |serial|
+    @serial = serial
+  end
+  parser.on("-f f", "--flasher=f", "device flasher") do |flasher|
+    @flasher = flasher
+  end
+  parser.on("-r r", "--resource=r", "image resource") do |resource|
+    @resource = resource
+  end
+  parser.on("-t t", "--testcase=t", "testcase name") do |testcase|
+    @testcase = testcase
+  end
+end.parse!
 
 base_url = "http://artifactory.arimacomm.com.tw:8081/artifactory"
 
-if pattern.nil? || pattern.empty?
-  aql = 'items.find({"$and":[{"created":{"$last":"2days"}},{"name":{"$match":"' + project + '*REL*userdebug*fastbootimage.7z"}}]})'
+if @resource.nil? || @resource.empty?
+  aql = 'items.find({"$and":[{"created":{"$last":"4days"}},{"name":{"$match":"' + @project + '*REL*userdebug*fastbootimage.7z"}}]})'
   result = RestClient.post "#{base_url}/api/search/aql", aql, :content_type => "text/plain"
   files = JSON.parse(result.to_s)["results"]
   files.each do |file|
@@ -58,20 +71,20 @@ if pattern.nil? || pattern.empty?
     autotest_artifact = fastboot_artifact.sub('fastbootimage.7z', 'test' + times + '.zip')
     # start testing
     download("#{base_url}/#{file['repo']}/#{file['path']}/#{fastboot_artifact}", fastboot_artifact)
-    run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{flasher}", "#{testcase}")
+    run_tradefed(@project, @serial, "#{fastboot_artifact}", "#{autotest_artifact}", @flasher, @testcase)
     upload("#{base_url}/libs-test-local/#{file['path']}/#{autotest_artifact}", autotest_artifact)
     update_prop(base_url, "#{file['repo']}/#{file['path']}/#{fastboot_artifact}", "#{base_url}/libs-test-local/#{file['path']}/#{autotest_artifact}", times)
   end
 else
   # set up variables
-  path = pattern.rpartition('/').first.rpartition('local/').last
-  fastboot_artifact = pattern.rpartition('/').last
+  path = @resource.rpartition('/').first.rpartition('local/').last
+  fastboot_artifact = @resource.rpartition('/').last
   times = (get_times(base_url, fastboot_artifact)+1).to_s
   autotest_artifact = fastboot_artifact.sub('fastbootimage.7z', 'test' + times + '.zip')
   # start testing
-  system("ruby", "configuration.rb", "#{testcase}")
-  download("#{base_url}/#{pattern}", fastboot_artifact)
-  run_tradefed("#{project}", "#{serial}", "#{fastboot_artifact}", "#{autotest_artifact}", "#{flasher}", "../test.xml")
+  system("ruby", "configuration.rb", @testcase)
+  download("#{base_url}/#{@resource}", fastboot_artifact)
+  run_tradefed(@project, @serial, "#{fastboot_artifact}", "#{autotest_artifact}", @flasher, "../test.xml")
   upload("#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", autotest_artifact)
-  update_prop(base_url, pattern, "#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", times)
+  update_prop(base_url, @resource, "#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", times)
 end
