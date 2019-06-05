@@ -88,7 +88,7 @@ else
   times = (get_times(base_url, fastboot_artifact)+1).to_s
   autotest_artifact = fastboot_artifact.sub('fastbootimage.7z', 'test' + times + '.zip')
   # start testing
-  system("ruby", "configuration.rb", @testcase)
+  system("ruby", "configuration.rb", @testcase, @project)
   download("#{base_url}/#{@resource}", fastboot_artifact)
   run_tradefed(@project, @serial, "#{fastboot_artifact}", "#{autotest_artifact}", @flasher, "../test.xml")
   upload("#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", autotest_artifact)
