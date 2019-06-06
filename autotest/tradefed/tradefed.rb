@@ -4,13 +4,13 @@ require 'optparse'
 require 'rest-client'
 
 def download(url, file)
-  puts "download #{file} ..."
+  puts "download #{file}"
   result = RestClient.get url
   File.write(file, result.to_s)
 end
 
 def upload(url, file)
-  puts "upload #{url} ..."
+  puts "upload #{url}"
   md5 = Digest::MD5.hexdigest File.read(file)
   RestClient.put url, File.open(file, 'rb'), {"X-Checksum": md5}
 end
