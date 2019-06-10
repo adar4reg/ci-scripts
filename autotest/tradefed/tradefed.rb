@@ -66,7 +66,7 @@ end.parse!
 base_url = "http://artifactory.arimacomm.com.tw:8081/artifactory"
 
 if @resource.nil? || @resource.empty?
-  aql = 'items.find({"$and":[{"created":{"$last":"2days"}},{"name":{"$match":"' + @project + '*REL*userdebug*fastbootimage.7z"}}]})'
+  aql = 'items.find({"$and":[{"created":{"$last":"2days"}},{"$or":[{"name":{"$match":"' + @project + '*REL*userdebug*fastbootimage.7z"}},{"name":{"$match":"' + @project + '*DEV*userdebug*fastbootimage.7z"}}]}]})'
   result = RestClient.post "#{base_url}/api/search/aql", aql, :content_type => "text/plain"
   files = JSON.parse(result.to_s)["results"]
   puts "Path = No New Changes" if files.empty?
