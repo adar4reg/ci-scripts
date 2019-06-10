@@ -69,6 +69,7 @@ if @resource.nil? || @resource.empty?
   aql = 'items.find({"$and":[{"created":{"$last":"2days"}},{"name":{"$match":"' + @project + '*REL*userdebug*fastbootimage.7z"}}]})'
   result = RestClient.post "#{base_url}/api/search/aql", aql, :content_type => "text/plain"
   files = JSON.parse(result.to_s)["results"]
+  puts "Path = No New Changes" if files.empty?
   files.each do |file|
     # set up variables
     fastboot_artifact = file['name']
