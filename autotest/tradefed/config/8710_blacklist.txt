@@ -11,14 +11,3 @@ ru.yandex.searchplugin
 com.yandex.browser
 ru.yandex.weatherplugin
 com.qualcomm.qti.logkit
-com.android.documentsui
-com.google.android.gm
-com.google.android.apps.maps
-com.google.android.videos
-com.google.android.googlequicksearchbox:search
-com.android.vending
-com.google.android.calculator
-com.google.android.music:ui
-com.google.android.calendar
-com.google.android.apps.messaging
-com.google.android.gms.persistent
