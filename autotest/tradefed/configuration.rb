@@ -10,6 +10,8 @@ def create_xml(testcase, project)
       t.test(class: "com.arima.autotest.tradefed.#{tc}") do |o|
         if tc.eql? "monkey.MonkeyBase"
           o.option(name: "monkey-config", value: "#{project}_monkey_config.py")
+          o.option(name: "use-pkg-blacklist-file", value: "true")
+          o.option(name: "monkey-blacklist", value: "#{project}_blacklist.txt")
         end
       end
     end
