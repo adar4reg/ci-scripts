@@ -1,0 +1,4 @@
+com.android.settings
+com.android.dialer
+com.android.mms
+com.android.contacts
