@@ -154,10 +154,14 @@ else
       `git config user.name ${GIT_SSH_USER}`
       `git config user.email $(ssh -p 29418 ${GIT_SSH_USER}@#{host} user email)`
       `git merge FETCH_HEAD --no-ff --log -m "Merge branch #{(source_branch.split('-'))[-1]} into #{(target_branch.split('-'))[-1]}"`
-      if dry_run != "true"
+    end
+  }
+  if dry_run != "true"
+    merge_auto.each {|my_mergeable_info|
+      Dir.chdir(my_mergeable_info.project_path) do
         `git push origin HEAD:refs/for/#{target_branch}`
         `ssh -p 29418 ${GIT_SSH_USER}@#{host} gerrit review $(git rev-parse HEAD) --code-review +2 --verified +1 --submit`
       end
-    end
-  }
+    }
+  end
 end
