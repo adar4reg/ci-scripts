@@ -24,7 +24,8 @@ cd fastboot_bin
 zip -r ../fastboot.zip *
 cd ..
 
-java -cp "/opt/tradefed/*" com.android.tradefed.command.CommandRunner ${testcase} --log-level=debug --log-file-path=. --serial=${serial} ${flasher}
+cp /opt/tradefed/tradefed-testcase-1.0-jar-with-dependencies.jar .
+java -cp "./*" com.android.tradefed.command.CommandRunner ${testcase} --log-level=debug --log-file-path=. --serial=${serial} ${flasher}
 
 for z in 0/stub/**/*.zip; do unzip ${z}; done
 mv 0/stub/**/test*.html test_result.html
