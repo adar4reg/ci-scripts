@@ -1,0 +1,29 @@
+# Roots of the synchronization
+root = /media/d/seafile/seafile_tp/
+root = /media/d/seafile/seafile_nj/
+
+# If you don't want to be prompted, and just accept Unison's recommendation:
+auto = true
+
+# If you want Unison to run without any user input, try "batch" mode.
+batch = true
+
+# file modification times are propagated.
+times = true
+
+# Resolve conflicts
+prefer = newer
+
+# Paths to synchronize
+#path = dir1
+#path = dir2
+
+confirmbigdel = false
+
+# Some regexps specifying names and paths to ignore
+#ignore = Path 123
+ignore = Name .Trash-1000
+
+# logging messages will be appended to
+logfile = /home/administrator/.unison/unison.log
+
