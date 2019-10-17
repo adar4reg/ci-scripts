@@ -1,0 +1,8 @@
+open ftp://ftp.arimatech.com.cn
+
+user 'NJPV Monkey log' '20190419'
+
+mirror --continue --verbose / /home/administrator/server-M'
+
+exit
+
