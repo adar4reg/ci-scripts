@@ -83,6 +83,44 @@ class Gerrit
   end
 end
 
+def merge_process(logger, host, manifest_project, source_branch, target_branch, merge_type, merge_infos, dry_run)
+  output = `repo init -q -u git://#{host}/#{manifest_project} -b #{target_branch} --reference=/media/d/mirror`
+  conflicts = {}
+  merge_infos.each {|my_mergeable_info|
+    if merge_type == 'conflict'
+      logger.warn("#{my_mergeable_info.project_name}:")
+      logger.warn("\t#{my_mergeable_info.source_revision_sha1} -> #{my_mergeable_info.target_revision_sha1}")
+      conflicts = my_mergeable_info.mergeable_info['conflicts']
+    else
+      logger.info("#{my_mergeable_info.project_name}:")
+      logger.info("\t#{my_mergeable_info.source_revision_sha1} -> #{my_mergeable_info.target_revision_sha1}")
+    end
+    output = `repo sync -cq #{my_mergeable_info.project_name}`
+    Dir.chdir(my_mergeable_info.project_path) do
+      `git checkout #{my_mergeable_info.target_revision_sha1}`
+      `git fetch origin #{my_mergeable_info.source_revision_sha1}`
+      output = `git config user.name ${GIT_SSH_USER}`
+      output = `git config user.email $(ssh -p 29418 ${GIT_SSH_USER}@#{host} user email)`
+      `git merge FETCH_HEAD --no-ff --log -m "Merge branch #{(source_branch.split('-'))[-1]} into #{(target_branch.split('-'))[-1]}"`
+      if merge_type == 'conflict'
+        conflicts.each { |conflict|
+          logger.warn("Conflict file : #{conflict}")
+          blame_output = `git blame -eL "/^<<<</,/^>>>>/" -- #{conflict}`
+          puts blame_output
+        }
+        output = `git add .`
+        output = `git commit --no-edit`
+      end
+      if dry_run != "true"
+        `git push origin HEAD:refs/for/#{target_branch}`
+        if merge_type == 'auto'
+          `ssh -p 29418 ${GIT_SSH_USER}@#{host} gerrit review $(git rev-parse HEAD) --code-review +2 --verified +1 --submit`
+        end
+      end
+    end
+  }
+end
+
 logger = Logger.new(STDOUT)
 logger.level = Logger::INFO
 
@@ -131,10 +169,7 @@ if merge_conflict.size != 0
   logger.warn("====================================================")
   logger.warn("the following project(s) need to be merged manually:")
   logger.warn("====================================================")
-  merge_conflict.each {|my_mergeable_info|
-    logger.warn("#{my_mergeable_info.project_name}:")
-    logger.warn("\t#{my_mergeable_info.source_revision_sha1} -> #{my_mergeable_info.target_revision_sha1}")
-  }
+  merge_process(logger, host, manifest_project, source_branch, target_branch, 'conflict', merge_conflict, dry_run)
   exit(1)
 elsif merge_auto.size == 0
   logger.warn("====================================================")
@@ -143,25 +178,5 @@ elsif merge_auto.size == 0
   exit(0)
 else
   logger.info("merge #{source_branch} into #{target_branch}")
-  `repo init -q -u git://#{host}/#{manifest_project} -b #{target_branch} --reference=/media/d/mirror`
-  merge_auto.each {|my_mergeable_info|
-    logger.info("#{my_mergeable_info.project_name}:")
-    logger.info("\t#{my_mergeable_info.source_revision_sha1} -> #{my_mergeable_info.target_revision_sha1}")
-    `repo sync -c #{my_mergeable_info.project_name}`
-    Dir.chdir(my_mergeable_info.project_path) do
-      `git checkout #{my_mergeable_info.target_revision_sha1}`
-      `git fetch origin #{my_mergeable_info.source_revision_sha1}`
-      `git config user.name ${GIT_SSH_USER}`
-      `git config user.email $(ssh -p 29418 ${GIT_SSH_USER}@#{host} user email)`
-      `git merge FETCH_HEAD --no-ff --log -m "Merge branch #{(source_branch.split('-'))[-1]} into #{(target_branch.split('-'))[-1]}"`
-    end
-  }
-  if dry_run != "true"
-    merge_auto.each {|my_mergeable_info|
-      Dir.chdir(my_mergeable_info.project_path) do
-        `git push origin HEAD:refs/for/#{target_branch}`
-        `ssh -p 29418 ${GIT_SSH_USER}@#{host} gerrit review $(git rev-parse HEAD) --code-review +2 --verified +1 --submit`
-      end
-    }
-  end
+  merge_process(logger, host, manifest_project, source_branch, target_branch, 'auto', merge_auto, dry_run)
 end
