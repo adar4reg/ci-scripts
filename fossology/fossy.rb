@@ -29,7 +29,7 @@ def upload(token, url, folder_id, file_name)
 end
 
 def analyze(token, url, folder_id, upload_id)
-  payload = '{"analysis":{"monk":true, "nomos":true}}'
+  payload = '{"analysis":{"monk":true, "nomos":true, "copyright_email_author":true}}'
   headers = { Authorization: 'Bearer ' + token, folderId: folder_id, uploadId: upload_id, content_type: :json}
   do_post("#{url}/jobs", payload, headers)
 end
@@ -40,7 +40,7 @@ def report(token, url, upload_id)
   JSON.parse(r)['message'].split('/').last
 end
 
-def download(token, url, report_id)
+def download_license(token, url, report_id)
   headers = { Authorization: 'Bearer ' + token}
   r = do_get("#{url}/report/#{report_id}", headers)
   report = Nokogiri::XML r.to_s
@@ -50,7 +50,17 @@ def download(token, url, report_id)
   return 'NA'
 end
 
-def license(filename)
+def download_copyright(token, url, report_id)
+  headers = { Authorization: 'Bearer ' + token}
+  r = do_get("#{url}/report/#{report_id}", headers)
+  report = Nokogiri::XML r.to_s
+  if report.xpath("//spdx:copyrightText") != nil
+    return report.xpath("//spdx:copyrightText").text.lstrip.rstrip
+  end
+  return 'NA'
+end
+
+def info(filename)
   url = 'http://user-test.arimacomm.com.tw:8081/repo/api/v1'
   token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ1c2VyLXRlc3QuYXJpbWFjb21tLmNvbS50dyIsImF1ZCI6InVzZXItdGVzdC5hcmltYWNvbW0uY29tLnR3IiwiZXhwIjoxNTcyMTM0Mzk5LCJuYmYiOjE1Njk0NTYwMDAsImp0aSI6Ik1pNHoiLCJzY29wZSI6IndyaXRlIn0.GUUypRk0X2xk521ZyltwPP4-hBRP-ZI_fyuPKLlNxys'
   folder_id = '1'
@@ -59,6 +69,8 @@ def license(filename)
   analyze(token, url, folder_id, upload_id)
   report_id = report(token, url, upload_id)
   sleep(5)
-  download(token, url, report_id)
+  license = download_license(token, url, report_id)
+  copyright = download_copyright(token, url, report_id)
+  return [license, copyright]
 end
 
