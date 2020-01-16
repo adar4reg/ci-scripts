@@ -1,0 +1,58 @@
+0000-RDTS-13-001_Widget_Test_Case_for_Android L_SP1.5_20171115_Jessiefang.xls
+0000-RDTS-13-002_Home_screen_Test_Case_for_Android Q_SP1.9_20191129_dongya.xls
+0000-RDTS-13-003_Phonebook_Test_cases_for_Android_SP1.5_20171108_Realrui.xls
+0000-RDTS-13-005_Message Test_Case_for_Android_SP5.3_20191203_dongya.xls
+0000-RDTS-13-006_SIM_Test_cases_for_Android L_SP1.2_20181123_dongya.xls
+0000-RDTS-13-009_Settings_Test_Case_for_Android Q_SP2.4_20191205.xls
+0000-RDTS-13-010_Bluetooth_Test_Case_for_Android L_SP1.8_20191028_candy.xls
+0000-RDTS-13-011_WiFi_Test_cases_for_Android L_SP1.4_20191204_Roy.xls
+0000-RDTS-13-012_Camera_Test_Case_for_Android L_SP2.6_20191024_candy.xls
+0000-RDTS-13-014_Calculator_Test_cases_for_Android L_SP1.2_20171107_Real.xls
+0000-RDTS-13-017_WiFi_direct_Test_cases_for_Android L_SP1.1_20181127_Roy.xls
+0000-RDTS-13-018_Clock_Test_Case_for_Android L_SP1.4_20171108_Jessiefang.xls
+0000-RDTS-13-019_Language_Check_Test_Case_for_Android_SP2.1_20181127_realrui.xls
+0000-RDTS-13-020_Airplane mode_Test_Case_for_Android_SP1.3_20181129_Realrui.xls
+0000-RDTS-13-021_PHF_Test_Case_for_Android L_SP1.5_20181217_Jessie.xls
+0000-RDTS-13-023_Network_Test_Case_for_Android L_SP1.7_20180103_Jessiefang.xls
+0000-RDTS-13-026_TextInput_Test_Case_for_Android L_SP1.8_20181211_Jessiefang.xls
+0000-RDTS-13-027_Memory_Test_Case_for_Android_SP1.7_20190726_Jessiefang.xls
+0000-RDTS-13-028_USB_Test_Case_for_Android _SP1.5_20181122_dongya.xls
+0000-RDTS-13-030_SIM_Toolkit_Test_Case_for_Android_SP1.1_20160816_Realrui.xls
+0000-RDTS-13-031_DRM_Test_cases_for_Android L_SP1.4_20190227_Roy.xls
+0000-RDTS-13-035_Google Search_Test_Case_for_Android_SP1.0_20180510_candy.xls
+0000-RDTS-13-036_Charging_Test_Case_for_Android L_SP1.6_20191018.xls
+0000-RDTS-13-038_Gmail_Test_cases_for_Android_SP1.4_20171123_Realrui.xls
+0000-RDTS-13-040_YouTube_Test_cases_for_Android_SP2.2_20171113_dongya.xls
+0000-RDTS-13-041_Maps_Test_cases_for_Android_SP1.2_20171109_Realrui.xls
+0000-RDTS-13-044_Market(Playstore)_Test_cases_for_Android_SP1.7_20181127_Real.xls
+0000-RDTS-13-047_Lowbattery_Test_Case_for_Android L_SP1.4_20171123_Jessiefang.xls
+0000-RDTS-13-048_Screen_lock_Test_cases_for_Android P_SP1.7_20181121_dongya.xls
+0000-RDTS-13-051_NFC_Test_cases_for_Android_SP4.6_20191025_Angelialu.xls
+0000-RDTS-13-054_Others_Test_cases_for_Android_SP3.4_20181212_Dongya.xls
+0000-RDTS-13-060_Play Music_Test_cases_for_Android_SP1.8_20171115_candy.xls
+0000-RDTS-13-068_DualSIM_Test_cases_for_Android L_SP1.5_20181126_dongya.xls
+0000-RDTS-13-069_3rd party Apps check_for_Android_ SP2.4_20190117_dongya.xls
+0000-RDTS-13-074_Timer_Test_Case_for_Android_SP2.6_20171128_Real.xls
+0000-RDTS-13-075_Stopwatch_Test_Case_for_Android_SP1.4_20181217_clareliu.xls
+0000-RDTS-13-077_Sound_Recorder_Test_cases_for_Android L_SP1.0_20171114_Roy.xls
+0000-RDTS-13-099_Stress test_Test_cases_for_Android_SP1.8_20181203_dongya.xls
+0000-RDTS-13-106_Google Voice Search_Test_Case_for_Android_SP3.1_20160104_candy.xls
+0000-RDTS-13-109_Chrome_Test_case_for_Android L_SP1.3_20190104_Roy.xls
+0000-RDTS-13-110_Battery life_Test_cases_for_Android L_SP1.0_20150128_dongya.xls
+0000-RDTS-13-114_Tethering&Hotspot_Test_cases_for_Android_SP1.2_20181116_Roy.xls
+0000-RDTS-13-115_Google Drive_Test Case for Android_SP2.0_20171206_Roy.xls
+0000-RDTS-13-119_Printing_Test_cases_for_Android_SP1.2_20171123_Realrui.xls
+0000-RDTS-14-116_File_manager_Test_cases_for_Android L_SP1.1_20191025_Roy.xls
+0000-RDTS-14-117_Cast(WiFi Display)_Test_cases_for_Android L_SP1.7_20181203_Roy.xls
+0000-RDTS-14-122_Google Photos_Test_Case_for_Android P_SP1.2_20191009.xls
+0000-RDTS-14-157_LTE_Test_cases_for_Android_SP1.3_20161202_NJPV.xls
+0000-RDTS-14-167_Psensor_Test_Case_for_Android_SP1.5_20191024.xls
+0000-RDTS-15-171_Play Movies & TV_Test_cases_for_Android L_SP1.2_20181215_Realrui.xls
+0000-RDTS-15-237_Google Calendar_Test_Case_for_Android M_SP1.4_ 20171113_Jessiefang.xls
+0000-RDTS-16-248_Touch Panel Test cases_SP1.7_NJPV 20171018.xls
+0000-RDTS-16-260_VoLTE_Test_cases_for_Android_SP1.3_20101024_NJPV_Candy.xls
+0000-RDTS-16-262_Setup Guide_Test_Case_for_Android_SP1.1_20180926_Jessiefang.xls
+0000-RDTS-16-264_FingerPrint_Test_Case_for_Android_SP1.6_20181215_Realrui.xls
+0000-RDTS-16-267_Duo_Test_Case_for_Android L_SP1.1_20170912_Realrui.xls
+0000-RDTS-18-323_NFC Tools_Test_Case_for_Android _SP1.0_20190102_Roy&Dongya.xls
+0000-RDTS-19-325_RSU_Test_Case_for_Android L_SP1.0_20191212_candy.xls
