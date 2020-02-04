@@ -1,0 +1,12 @@
+com.android.chrome
+com.android.vending
+com.google.android.apps.photos
+com.google.android.calculator
+com.google.android.calendar
+com.google.android.deskclock
+com.google.android.gm
+com.google.android.gms.persistent
+com.google.android.googlequicksearchbox
+com.google.android.videos
+com.qualcomm.qti.logkit
+com.qualcomm.qti.logkit.lite
