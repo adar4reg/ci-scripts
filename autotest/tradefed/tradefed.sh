@@ -6,6 +6,7 @@ fastboot_artifact=$3
 autotest_artifact=$4
 flasher=$5
 testcase=$6
+tmp_folder="tmp_$serial"
 
 if [ -z "$testcase" ]; then
   testcase="arima/$project"
@@ -15,13 +16,12 @@ if ! [ -z "$flasher" ]; then
   flasher="--flasher-class $flasher"
 fi
 
-rm -rf tmp
-mkdir tmp
-cd tmp
-mv ../$fastboot_artifact .
-7z x $fastboot_artifact
+rm -rf $tmp_folder
+mkdir $tmp_folder
+cd $tmp_folder
+7z x ../$fastboot_artifact -o./
 cd fastboot_bin
-zip -r ../fastboot.zip *
+zip -r -0 ../fastboot.zip *
 cd ..
 
 cp /opt/tradefed/tradefed-testcase-1.0-jar-with-dependencies.jar .
@@ -33,4 +33,4 @@ mv 0/stub/**/*.jpeg .
 zip -r ../${autotest_artifact} *.txt *.html *.jpeg anr
 
 cd ..
-rm -rf tmp
+rm -rf $tmp_folder
