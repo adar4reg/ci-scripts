@@ -30,7 +30,7 @@ java -cp "./*" com.android.tradefed.command.CommandRunner ${testcase} --log-leve
 for z in 0/stub/**/*.zip; do unzip ${z}; done
 mv 0/stub/**/test*.html test_result.html
 mv 0/stub/**/*.jpeg .
-zip -r ../${autotest_artifact} *.txt *.html *.jpeg anr
+zip -r ../${serial}_${autotest_artifact} *.txt *.html *.jpeg anr
 
 cd ..
 rm -rf $tmp_folder

@@ -79,7 +79,7 @@ if @resource.nil? || @resource.empty?
     # start testing
     download("#{base_url}/#{file['repo']}/#{file['path']}/#{fastboot_artifact}", fastboot_artifact)
     run_tradefed(@project, @serial, "#{fastboot_artifact}", "#{autotest_artifact}", @flasher, @testcase)
-    upload("#{base_url}/#{file['repo']}/#{file['path']}/#{autotest_artifact}", autotest_artifact)
+    upload("#{base_url}/#{file['repo']}/#{file['path']}/#{autotest_artifact}", "#{@serial}_#{autotest_artifact}")
     update_prop(base_url, "#{file['repo']}/#{file['path']}/#{fastboot_artifact}", times)
   end
 else
@@ -92,6 +92,6 @@ else
   system("ruby", "configuration.rb", @testcase, @project)
   download("#{base_url}/#{@resource}", fastboot_artifact)
   run_tradefed(@project, @serial, "#{fastboot_artifact}", "#{autotest_artifact}", @flasher, "../test.xml")
-  upload("#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", autotest_artifact)
+  upload("#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", "#{@serial}_#{autotest_artifact}")
   update_link(base_url, @resource, "#{base_url}/libs-test-local/#{path}/#{autotest_artifact}", times)
 end
